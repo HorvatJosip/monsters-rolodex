@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import CardList from './components/CardList/CardList';
 import SearchBox from './components/SearchBox/SearchBox';
+import Fallback from './Fallback';
 
 class App extends Component {
   constructor() {
@@ -15,7 +16,13 @@ class App extends Component {
 
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return Fallback.monsters;
+        }
+      })
       .then(users => this.setState({ monsters: users }));
   }
 
