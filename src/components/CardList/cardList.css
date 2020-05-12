@@ -1,0 +1,8 @@
+.card-list {
+  width: 55%;
+  margin: 0 auto;
+  display: grid;
+  /* minmax will force the content to fit */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
