@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import CardList from './components/CardList/CardList';
 import SearchBox from './components/SearchBox/SearchBox';
+import Loading from './components/Loading/Loading';
 import Fallback from './Fallback';
 
 class App extends Component {
@@ -11,19 +12,14 @@ class App extends Component {
     this.state = {
       monsters: [],
       searchText: '',
+      loading: true,
     };
   }
 
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return Fallback.monsters;
-        }
-      })
-      .then(users => this.setState({ monsters: users }));
+      .then(response => (response.ok ? response.json() : Fallback.monsters))
+      .then(users => this.setState({ monsters: users, loading: false }));
   }
 
   handleSearchChange = e => {
@@ -41,12 +37,18 @@ class App extends Component {
       <div className='App'>
         <h1>Monsters Rolodex</h1>
 
-        <SearchBox
-          placeholder='Search monsters'
-          handleChange={this.handleSearchChange}
-        />
+        {this.state.loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <SearchBox
+              placeholder='Search monsters'
+              handleChange={this.handleSearchChange}
+            />
 
-        <CardList monsters={filteredMonsters} />
+            <CardList monsters={filteredMonsters} />
+          </div>
+        )}
       </div>
     );
   }
